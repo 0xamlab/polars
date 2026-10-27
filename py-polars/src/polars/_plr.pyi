@@ -924,6 +924,32 @@ class PyLazyFrame:
         scan_options: ScanOptions,
     ) -> PyLazyFrame: ...
     @staticmethod
+    def new_from_database(
+        source: str,
+        source_type: str | None,
+        connection: Any,
+        connection_kind: str,
+        dialect: str | None,
+        driver: str | None,
+        connect_options: pylist[tuple[str, str]],
+        execute_options: pylist[tuple[str, str]],
+        python_options: tuple[dict[str, Any], dict[str, Any]] | None,
+        credential_provider: Any | None,
+        params: Any | None,
+        schema: Any | None,
+        schema_overrides: Any | None,
+        partition_on: str | None,
+        partition_auto: bool,
+        partition_num: int | None,
+        partition_range: tuple[Any, Any] | None,
+        partition_predicates: pylist[str] | None,
+        order_by: pylist[str],
+        consistency: str,
+        max_connections: int | None,
+        batch_size: int | None,
+        pushdown: bool,
+    ) -> PyLazyFrame: ...
+    @staticmethod
     def scan_from_python_function_arrow_schema(
         schema: Any,
         scan_fn: Any,
@@ -2401,6 +2427,13 @@ def business_day_count(
 
 # functions.eager
 def concat_df(dfs: Any) -> PyDataFrame: ...
+
+# database scans
+def database_driver_statuses(
+    dialect: str | None = None,
+) -> pylist[tuple[str, str, bool, str | None, str | None, str]]: ...
+def database_dialect_from_scheme(scheme: str) -> str: ...
+def database_find_adbc_driver(name: str) -> tuple[str, str | None] | None: ...
 def concat_series(series: Any) -> PySeries: ...
 def concat_df_diagonal(dfs: Any) -> PyDataFrame: ...
 def concat_df_horizontal(dfs: Any, strict: bool = False) -> PyDataFrame: ...

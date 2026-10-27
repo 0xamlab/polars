@@ -147,6 +147,14 @@ fn write_scan(
         }
     }
 
+    #[cfg(feature = "database")]
+    if let Some(FileScanIR::Database { config }) = scan_type {
+        let indent = indent + INDENT_INCREMENT;
+        for (k, v) in config.explain_properties() {
+            write!(f, "\n{:indent$}{k}: {v}", "")?;
+        }
+    }
+
     let total_columns = total_columns - usize::from(row_index.is_some());
     if n_columns != usize::MAX {
         write!(

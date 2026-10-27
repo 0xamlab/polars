@@ -387,6 +387,9 @@ impl SlicePushDown {
 
                     FileScanIR::ExternalReaderBuilder { .. } => true,
 
+                    #[cfg(feature = "database")]
+                    FileScanIR::Database { .. } => true,
+
                     // TODO: This can be `true` after Anonymous scan dispatches to new-streaming.
                     FileScanIR::Anonymous { .. } => state.offset == 0,
                 } =>

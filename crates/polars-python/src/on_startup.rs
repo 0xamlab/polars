@@ -326,6 +326,9 @@ pub unsafe fn register_startup_deps(catch_keyboard_interrupt: bool, warn_functio
             },
         );
 
+        #[cfg(feature = "database")]
+        crate::io::database::register();
+
         polars_plan::dsl::DATASET_PROVIDER_VTABLE.get_or_init(|| PythonDatasetProviderVTable {
             name: dataset_provider_funcs::name,
             schema: dataset_provider_funcs::schema,

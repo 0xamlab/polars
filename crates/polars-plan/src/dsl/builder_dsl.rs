@@ -150,6 +150,30 @@ impl DslBuilder {
         .into()
     }
 
+    /// A database scan. The sources are filled in by DSL to IR resolution, with one id per
+    /// partition.
+    #[cfg(feature = "database")]
+    pub fn scan_database(
+        options: polars_io::database::DatabaseScanOptions,
+        schema: Option<SchemaRef>,
+    ) -> DslBuilder {
+        DslPlan::Scan {
+            sources: ScanSources::Paths(polars_buffer::Buffer::from_owner([
+                polars_utils::pl_path::PlRefPath::new("0"),
+            ])),
+            unified_scan_args: Box::new(UnifiedScanArgs {
+                schema,
+                expand_paths: false,
+                ..Default::default()
+            }),
+            scan_type: Box::new(FileScanDsl::Database {
+                options: Arc::new(options),
+            }),
+            cached_ir: Default::default(),
+        }
+        .into()
+    }
+
     pub fn from_dsl_resolver(dsl_resolver: Arc<DslResolver>) -> DslBuilder {
         DslPlan::Resolver {
             resolver: dsl_resolver,

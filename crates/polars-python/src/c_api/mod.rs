@@ -141,6 +141,18 @@ pub fn _polars_runtime(py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     // Expr objects
     m.add_wrapped(wrap_pymodule!(_expr_nodes))?;
 
+    // Functions - database scans
+    #[cfg(feature = "database")]
+    {
+        use crate::io::database;
+        m.add_wrapped(wrap_pyfunction!(database::database_driver_statuses))
+            .unwrap();
+        m.add_wrapped(wrap_pyfunction!(database::database_dialect_from_scheme))
+            .unwrap();
+        m.add_wrapped(wrap_pyfunction!(database::database_find_adbc_driver))
+            .unwrap();
+    }
+
     // Functions - eager
     m.add_wrapped(wrap_pyfunction!(functions::concat_df))
         .unwrap();

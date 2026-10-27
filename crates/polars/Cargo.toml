@@ -145,6 +145,7 @@ scan_lines = [
   "polars-lazy?/scan_lines",
   "streaming",
 ]
+database = ["polars-io", "polars-io/database", "polars-lazy?/database", "streaming"]
 
 # support for arrows ipc file parsing
 ipc = [

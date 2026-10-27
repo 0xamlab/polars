@@ -162,6 +162,17 @@ json = [
   "polars-parquet?/serde",
 ]
 scan_lines = ["polars/scan_lines", "polars-mem-engine/scan_lines"]
+database = [
+  "polars/database",
+  "polars-io/database",
+  "polars-io/dtype-extension",
+  "polars-io/dtype-decimal",
+  "polars-io/dtype-duration",
+  "polars-plan/database",
+  "polars-mem-engine/database",
+  "polars-stream?/database",
+  "json",
+]
 trigonometry = ["polars/trigonometry"]
 sign = ["polars/sign"]
 asof_join = ["polars/asof_join"]
@@ -295,6 +306,7 @@ io = [
   "scan_lines",
   "cloud",
   "clipboard",
+  "database",
 ]
 
 optimizations = [

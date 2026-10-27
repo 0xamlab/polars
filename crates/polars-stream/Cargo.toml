@@ -107,6 +107,7 @@ scan_lines = [
   "polars-plan/scan_lines",
   "polars-io/scan_lines",
 ]
+database = ["polars-mem-engine/database", "polars-plan/database", "polars-io/database"]
 cloud = ["polars-mem-engine/cloud", "polars-plan/cloud", "polars-io/cloud"]
 pivot = ["polars-mem-engine/pivot", "polars-plan/pivot", "polars-ops/pivot"]
 diff = ["polars-ops/diff", "polars-expr/diff", "polars-plan/diff", "polars-plan/abs", "polars-expr/abs"]

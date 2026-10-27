@@ -281,6 +281,10 @@ fn is_plain_scan(ir: &IR) -> bool {
             crate::dsl::FileScanIR::Csv { .. } => true,
             #[cfg(feature = "json")]
             crate::dsl::FileScanIR::NDJson { .. } => true,
+            // Read once per query, like a file; equality is by value, so it survives
+            // serialization.
+            #[cfg(feature = "database")]
+            crate::dsl::FileScanIR::Database { .. } => true,
             _ => false,
         },
         _ => false,

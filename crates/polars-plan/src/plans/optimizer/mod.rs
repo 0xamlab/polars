@@ -25,6 +25,8 @@ mod join_runtime_filter;
 mod join_utils;
 pub(crate) use join_utils::ExprOrigin;
 pub mod call_dsl_resolvers;
+#[cfg(feature = "database")]
+mod database;
 mod expand_datasets;
 mod extract_window;
 pub use expand_datasets::attach_dataset_scan_statistics;
@@ -421,6 +423,10 @@ pub fn optimize(
     }
 
     prune_parquet_metadata(root, ir_arena, expr_arena);
+
+    // Last: sees the final projection, predicate and slice of every database scan.
+    #[cfg(feature = "database")]
+    database::compile_database_scans(root, ir_arena, expr_arena)?;
 
     // During debug we check if the optimizations have not modified the final schema.
     #[cfg(debug_assertions)]

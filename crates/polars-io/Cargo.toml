@@ -22,6 +22,7 @@ polars-utils = { workspace = true, features = ['mmap', 'sysinfo'] }
 
 async-trait = { workspace = true, optional = true }
 atoi_simd = { workspace = true, optional = true }
+bitflags = { workspace = true, optional = true }
 blake3 = { workspace = true, optional = true }
 bytes = { workspace = true }
 chrono = { workspace = true, optional = true }
@@ -35,6 +36,7 @@ glob = { version = "0.3" }
 hashbrown = { workspace = true }
 itoa = { workspace = true, optional = true }
 libc = { workspace = true }
+libloading = { workspace = true, optional = true }
 memchr = { workspace = true }
 memmap = { workspace = true }
 num-traits = { workspace = true }
@@ -160,6 +162,16 @@ temporal = ["dtype-datetime", "dtype-date", "dtype-time"]
 simd = []
 nightly = []
 python = ["pyo3", "polars-error/python", "polars-utils/python"]
+# lazy database scans (`scan_database`)
+database = [
+  "dep:libloading",
+  "dep:bitflags",
+  "chrono",
+  "dtype-struct",
+  "dtype-date",
+  "dtype-datetime",
+  "dtype-time",
+]
 allow_unused = []
 
 [package.metadata.docs.rs]

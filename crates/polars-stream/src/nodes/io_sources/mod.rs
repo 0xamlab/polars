@@ -3,6 +3,8 @@ pub mod multi_scan;
 pub mod batch;
 #[cfg(feature = "csv")]
 pub mod csv;
+#[cfg(feature = "database")]
+pub mod database;
 #[cfg(feature = "python")]
 pub mod external_python;
 #[cfg(feature = "ipc")]

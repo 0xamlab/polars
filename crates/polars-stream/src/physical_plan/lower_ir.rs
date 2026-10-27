@@ -1069,6 +1069,13 @@ fn lower_ir_inner(
 
                     FileScanIR::ExpandedPaths { name: _ } => unreachable!(),
 
+                    #[cfg(feature = "database")]
+                    FileScanIR::Database { config } => Arc::new(
+                        crate::nodes::io_sources::database::DatabaseReaderBuilder::new(
+                            config.clone(),
+                        ),
+                    ) as _,
+
                     FileScanIR::ExternalReaderBuilder { external } => match external {
                         #[cfg(feature = "python")]
                         ExternalReaderBuilder::Python(builder) => {

@@ -740,6 +740,11 @@ fn rebuild_scan_from_expanded(
             FileScanIR::ExternalReaderBuilder { external }
         },
 
+        #[cfg(feature = "database")]
+        FileScanDsl::Database { .. } => {
+            polars_bail!(nyi = "a Python dataset that resolves to a database scan")
+        },
+
         FileScanDsl::Anonymous {
             options,
             function,

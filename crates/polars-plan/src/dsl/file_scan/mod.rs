@@ -91,6 +91,12 @@ pub enum FileScanDsl {
         external: ExternalReaderBuilder,
     },
 
+    #[cfg(feature = "database")]
+    #[cfg_attr(feature = "dsl-schema", schemars(skip))]
+    Database {
+        options: Arc<polars_io::database::DatabaseScanOptions>,
+    },
+
     #[cfg_attr(any(feature = "serde", feature = "dsl-schema"), serde(skip))]
     Anonymous {
         options: Arc<AnonymousScanOptions>,
@@ -360,6 +366,12 @@ pub enum FileScanIR {
         external: ExternalReaderBuilder,
     },
 
+    #[cfg(feature = "database")]
+    #[cfg_attr(feature = "dsl-schema", schemars(skip))]
+    Database {
+        config: Arc<polars_io::database::DatabaseScanConfig>,
+    },
+
     #[cfg_attr(any(feature = "serde", feature = "dsl-schema"), serde(skip))]
     Anonymous {
         options: Arc<AnonymousScanOptions>,
@@ -528,6 +540,9 @@ impl FileScanIR {
             Self::Lines { name: _ } => {},
             Self::ExpandedPaths { name: _ } => {},
             Self::ExternalReaderBuilder { external: _ } => {},
+            // Source ids index the compiled partitions; dropping sources keeps them valid.
+            #[cfg(feature = "database")]
+            Self::Database { config: _ } => {},
             Self::Anonymous {
                 options: _,
                 function: _,
@@ -947,6 +962,12 @@ mod _file_scan_eq_hash {
             external: &'a ExternalReaderBuilder,
         },
 
+        /// Compared by value: pointer identity does not survive plan serialization.
+        #[cfg(feature = "database")]
+        Database {
+            config: &'a polars_io::database::DatabaseScanConfig,
+        },
+
         Anonymous {
             options: &'a crate::dsl::AnonymousScanOptions,
             function: usize,
@@ -1002,6 +1023,9 @@ mod _file_scan_eq_hash {
                 FileScanIR::ExternalReaderBuilder { external } => {
                     FileScanEqHashWrap::ExternalReaderBuilder { external }
                 },
+
+                #[cfg(feature = "database")]
+                FileScanIR::Database { config } => FileScanEqHashWrap::Database { config },
 
                 FileScanIR::Anonymous { options, function } => FileScanEqHashWrap::Anonymous {
                     options,

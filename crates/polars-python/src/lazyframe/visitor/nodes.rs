@@ -73,6 +73,8 @@ fn scan_type_to_pyobject(
             Err(PyNotImplementedError::new_err("python dataset scan"))
         },
         FileScanIR::Anonymous { .. } => Err(PyNotImplementedError::new_err("anonymous scan")),
+        #[cfg(feature = "database")]
+        FileScanIR::Database { .. } => Err(PyNotImplementedError::new_err("database scan")),
     }
 }
 

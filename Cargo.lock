@@ -3374,6 +3374,7 @@ version = "0.55.1"
 dependencies = [
  "async-trait",
  "atoi_simd",
+ "bitflags",
  "blake3",
  "bytes",
  "chrono",
@@ -3388,6 +3389,7 @@ dependencies = [
  "hashbrown 0.17.1",
  "itoa",
  "libc",
+ "libloading",
  "memchr",
  "memmap2",
  "num-traits",

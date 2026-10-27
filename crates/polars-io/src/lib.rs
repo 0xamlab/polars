@@ -15,6 +15,8 @@ pub mod catalog;
 pub mod cloud;
 #[cfg(any(feature = "csv", feature = "json"))]
 pub mod csv;
+#[cfg(feature = "database")]
+pub mod database;
 pub mod external_reader;
 #[cfg(feature = "file_cache")]
 pub mod file_cache;

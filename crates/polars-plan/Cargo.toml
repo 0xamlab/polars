@@ -86,6 +86,7 @@ cloud = ["polars-io/cloud"]
 ipc = ["polars-io/ipc"]
 json = ["polars-io/json", "polars-json"]
 scan_lines = []
+database = ["polars-io/database"]
 csv = ["polars-io/csv"]
 temporal = [
   "chrono",
@@ -108,7 +109,7 @@ dtype-i8 = ["polars-core/dtype-i8"]
 dtype-i128 = ["polars-core/dtype-i128"]
 dtype-i16 = ["polars-core/dtype-i16"]
 dtype-f16 = ["polars-core/dtype-f16"]
-dtype-decimal = ["polars-core/dtype-decimal", "dtype-i128"]
+dtype-decimal = ["polars-core/dtype-decimal", "polars-io/dtype-decimal", "dtype-i128"]
 dtype-date = ["polars-defs/dtype-date", "temporal"]
 dtype-datetime = ["polars-defs/dtype-datetime", "temporal"]
 dtype-duration = [

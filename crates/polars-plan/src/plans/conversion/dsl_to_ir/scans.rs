@@ -100,6 +100,8 @@ pub(super) async fn dsl_to_ir(
                     sources.expand_paths(unified_scan_args).await?
                 },
                 FileScanDsl::Anonymous { .. } => sources.clone(),
+                #[cfg(feature = "database")]
+                FileScanDsl::Database { .. } => sources.clone(),
             }
         };
 
@@ -1980,6 +1982,47 @@ impl SourcesToFileInfo {
                     FileScanIR::ExternalReaderBuilder { external },
                 )
             },
+            #[cfg(feature = "database")]
+            FileScanDsl::Database { options } => async {
+                use polars_utils::async_utils::tokio_handle_ext::AbortOnDropHandle;
+
+                polars_ensure!(
+                    unified_scan_args.include_file_paths.is_none(),
+                    InvalidOperation: "include_file_paths is not supported for database scans"
+                );
+
+                let user_schema = unified_scan_args.schema.clone();
+                // Connecting and running catalog queries blocks.
+                let config = AbortOnDropHandle(ASYNC.spawn_blocking(move || {
+                    polars_io::database::resolve_scan(options, user_schema)
+                }))
+                .await
+                .unwrap()?;
+
+                let reader_schema = config.schema.clone();
+                let mut schema = reader_schema.clone();
+                if let Some(row_index) = &unified_scan_args.row_index {
+                    insert_row_index_to_schema(Arc::make_mut(&mut schema), row_index.name.clone())?;
+                }
+                let rows = match (exact_row_count, config.stats.rows) {
+                    (Some(n), _) => Card::Exact(n),
+                    (None, Some(n)) => Card::approx(n),
+                    (None, None) => Card::Unknown,
+                };
+
+                PolarsResult::Ok((
+                    FileInfo {
+                        schema,
+                        reader_schema: Some(either::Either::Right(reader_schema)),
+                        stats: ScanStats::new(rows),
+                    },
+                    FileScanIR::Database {
+                        config: Arc::new(config),
+                    },
+                ))
+            }
+            .await
+            .context(failed_here!(database scan))?,
             FileScanDsl::Anonymous {
                 mut file_info,
                 options,
